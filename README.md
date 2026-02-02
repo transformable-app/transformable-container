@@ -8,11 +8,11 @@ PocketBase-backed deploy API for a single static site: deploy (zip upload), list
 
 GitHub Actions publishes `ghcr.io/transformable-app/transformable-container` on `main` and tags. Compose pulls the image by default.
 
-**Setup:** Create host dirs and set `SITE_DEPLOY_TOKEN` in `.env` (see [.env.example](.env.example)). Optionally set `SITE_URL` and `DOCKER_IMAGE`.
+**Setup:** Create host dirs and set `SITE_DEPLOY_TOKEN` and `SITE_URL` in `.env` (see [.env.example](.env.example)).
 
 ```bash
-sudo mkdir -p /srv/pb/data /srv/site/releases
-sudo chown -R "$(id -u):$(id -g)" /srv/pb /srv/site
+sudo mkdir -p /home/forge/site_pb_data
+sudo chown -R "$(id -u):$(id -g)" /home/forge/site_pb_data
 cp .env.example .env   # edit: SITE_DEPLOY_TOKEN required
 ```
 
@@ -25,13 +25,13 @@ services:
     container_name: transformable
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8090:8090"
+      - 8090:8090
     volumes:
-      - /srv/pb/data:/app/pb_data
-      - /srv/site:/site
+      - /home/forge/site_pb_data:/app/pb_data
+      - /home/forge/site.example.com:/site
     environment:
       SITE_DEPLOY_TOKEN: "your-token"
-      SITE_URL: "https://www.example.com"
+      SITE_URL: "https://site.example.com"
       SITE_ROOT: "/site"
 ```
 
@@ -41,34 +41,31 @@ services:
 docker compose pull && docker compose up -d
 ```
 
-Compose exposes port `8090` on the host. Bind to `127.0.0.1` and put a reverse proxy (e.g. Nginx) in front; see below.
-
 ### Portainer Stack Example
 
-Use a stack with the same volumes and env vars (example values shown). This mirrors the compose setup above.
-
 ```yaml
-version: "3.8"
 services:
   transformable:
     image: ghcr.io/transformable-app/transformable-container:latest
-    container_name: transformable
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8090:8090"
+      - 8090:8090
     volumes:
-      - /srv/pb/data:/app/pb_data
-      - /srv/site:/site
+      - pb_data:/app/pb_data
+      - /home/forge/site.example.com:/site
     environment:
       SITE_DEPLOY_TOKEN: "your-token"
-      SITE_URL: "https://www.example.com"
+      SITE_URL: "https://site.example.com"
       SITE_ROOT: "/site"
+volumes:
+  pb_data:
+```
 
 ### Proxy (Nginx)
 
-The **site directory** and **PocketBase port** are configured at the proxy (e.g. a self-hosted subdomain with SSL).
+Docker exposes port `8090` on the host. Bind to `127.0.0.1` and put a reverse proxy (e.g. Nginx) in front. The **site directory** and **PocketBase port** are configured at the proxy (e.g. a self-hosted subdomain with SSL).
 
-- **Site directory** — The container writes releases under the mounted site path (e.g. `/srv/site` → `/site`), and updates a `current` symlink to the active release. In Nginx, set `root` (or `alias`) to that path plus `current`, e.g. `root /srv/site/current`. You can use a different host path as long as the same path is mounted into the container and Nginx is pointed at it.
+- **Site directory** — The container writes releases under the mounted site path (e.g. `/site` → `/home/forge/site.example.com`), and updates a `current` symlink to the active release. In Nginx, set `root` (or `alias`) to that path plus `current`, e.g. `root /home/forge/site.example.com/current`. You can use a different host path as long as the same path is mounted into the container and Nginx is pointed at it.
 - **PocketBase port** — Bind PocketBase to `127.0.0.1:8090` (or another local port). In Nginx, use `proxy_pass` to that address for the API and Admin UI (e.g. `location /api`, `location /_/`). TLS and public hostnames are then handled by Nginx.
 
 Example configs: [docs/DEPLOY.md](docs/DEPLOY.md#nginx-on-host).
