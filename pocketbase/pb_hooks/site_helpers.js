@@ -1,7 +1,7 @@
 // Shared helpers for site deploy hooks. Load with require() inside each handler.
 module.exports = {
   MAX_ZIP_BYTES: 100 * 1024 * 1024,
-  FORBIDDEN_SUBSTRINGS: ["..", ".pb.js", ".sh", ".exe", ".dll", ".so ", ".dylib"],
+  FORBIDDEN_SUBSTRINGS: ["..", ".pb.js", ".sh", ".exe", ".dll", ".so", ".dylib"],
   requireDeployToken: function (e) {
     var token = this.getDeployToken();
     if (!token) throw new UnauthorizedError("SITE_DEPLOY_TOKEN not configured");

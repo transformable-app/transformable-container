@@ -1,3 +1,6 @@
 .env
 .cursor.env
 .deploy-out.*
+.DS_Store
+site/
+site-build/
