@@ -1,0 +1,32 @@
+# Production compose. Use the published image or build locally.
+#
+# Published image: set in .env or env:
+#   DOCKER_IMAGE=YOUR_USERNAME/transformable-app-container:latest
+# Then: docker compose pull && docker compose up -d
+#
+# Local build (no DOCKER_IMAGE): docker compose up -d --build
+#
+# Before first run: create host dirs and set token
+#   sudo mkdir -p /srv/pb/data /srv/site/releases
+#   sudo chown -R "$(id -u):$(id -g)" /srv/pb /srv/site
+#   cp .env.example .env && edit .env (SITE_DEPLOY_TOKEN required; optional SITE_URL, DOCKER_IMAGE)
+
+services:
+  transformable:
+    image: ${DOCKER_IMAGE:-transformable-app-container:latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    volumes:
+      - /srv/pb/data:/app/pb_data
+      - /srv/site:/site
+    env_file:
+      - .env
+    environment:
+      - SITE_DEPLOY_TOKEN=${SITE_DEPLOY_TOKEN}
+      - SITE_URL=${SITE_URL:-https://www.example.com}
+    # Uncomment if host dirs are owned by a specific user (e.g. 1000:1000)
+    # user: "${UID:-1000}:${GID:-1000}"

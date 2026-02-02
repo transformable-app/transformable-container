@@ -1,0 +1,9 @@
+# Only pb_hooks are needed from pocketbase/; binary is downloaded in Dockerfile
+pocketbase/pocketbase
+pocketbase/CHANGELOG.md
+pocketbase/LICENSE.md
+.git
+.env
+.cursor.env
+*.md
+!README.md
