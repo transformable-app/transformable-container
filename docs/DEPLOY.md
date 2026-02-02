@@ -52,4 +52,4 @@ Add TLS (e.g. Let’s Encrypt) and other options as needed.
 | SITE_ROOT | No | Path to site root in container (releases + current). Default `/site`. |
 | SITE_URL | No | Public URL of the site (e.g. `https://www.example.com`). Used in deploy response. |
 
-For Cursor: put `PB_BASE_URL` and `SITE_DEPLOY_TOKEN` in `.env` or `.cursor.env`; see `skills.md`.
+For Cursor: put `PB_BASE_URL` and `SITE_DEPLOY_TOKEN` in `.env` or `.cursor.env`; see `skills.md`. If PocketBase is proxied on the same domain (e.g. `https://site.example.com/api`), `PB_BASE_URL` can match `SITE_URL`.
