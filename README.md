@@ -4,54 +4,9 @@ PocketBase-backed deploy API for a single static site: deploy (zip upload), list
 
 **Skill for agents (e.g. Cursor):** The **Docker image** built from this repo is the deploy-API solution that an agent can use (deploy zip, list revisions, rollback). This **repo** can be used locally in Cursor so [skills.md](skills.md) and `.env` are ready to go when developing or testing; agents will build in `site-build/`, deploy with `./scripts/deploy.sh`.
 
-## Build and run (Docker)
+## Docker (Compose)
 
-From the project root:
-
-**Using the GitHub-built image (GHCR)**  
-GitHub Actions builds and publishes `ghcr.io/transformable-app/transformable-container` on `main` and tags. Set `DOCKER_IMAGE` in `.env` or your shell:
-
-```bash
-export DOCKER_IMAGE=ghcr.io/transformable-app/transformable-container:latest
-```
-
-Then run with Docker Compose or `docker run` as shown below.
-
-**1. Build the image**
-
-```bash
-docker build -t transformable-container .
-```
-
-To pin a PocketBase version: `docker build --build-arg PB_VERSION=0.36.2 -t transformable-container .`
-
-**2. Create host dirs** (PocketBase data + site releases)
-
-```bash
-sudo mkdir -p /srv/pb/data /srv/site/releases
-sudo chown -R "$(id -u):$(id -g)" /srv/pb /srv/site
-```
-
-**3. Run the container**
-
-Set `SITE_DEPLOY_TOKEN` (required). Override `SITE_URL` if your site is not `https://www.example.com`.
-
-```bash
-docker run -d --name pocketbase --restart unless-stopped \
-  -p 127.0.0.1:8090:8090 \
-  -v /srv/pb/data:/app/pb_data \
-  -v /srv/site:/site \
-  -e SITE_DEPLOY_TOKEN=your-token \
-  -e SITE_URL=https://www.example.com \
-  --user "$(id -u):$(id -g)" \
-  transformable-container
-```
-
-PocketBase is at `http://127.0.0.1:8090` (Admin UI: `http://127.0.0.1:8090/_/`). The `revisions` collection is created automatically on first start. For Nginx and env details see [docs/DEPLOY.md](docs/DEPLOY.md).
-
-### Docker Compose
-
-[docker-compose.yml](docker-compose.yml) runs the same app for production. It uses the same host dirs and env as the `docker run` example above.
+GitHub Actions publishes `ghcr.io/transformable-app/transformable-container` on `main` and tags. Compose pulls the image by default.
 
 **Setup:** Create host dirs and set `SITE_DEPLOY_TOKEN` in `.env` (see [.env.example](.env.example)). Optionally set `SITE_URL` and `DOCKER_IMAGE`.
 
@@ -61,18 +16,53 @@ sudo chown -R "$(id -u):$(id -g)" /srv/pb /srv/site
 cp .env.example .env   # edit: SITE_DEPLOY_TOKEN required
 ```
 
-**Run:**
+**docker-compose example (standalone):**
 
-- **Published image (GHCR):** Set `DOCKER_IMAGE=ghcr.io/transformable-app/transformable-container:latest` in `.env`, then:
-  ```bash
-  docker compose pull && docker compose up -d
-  ```
-- **Local build (no published image):**
-  ```bash
-  docker compose up -d --build
-  ```
+```yaml
+services:
+  transformable:
+    image: ghcr.io/transformable-app/transformable-container:latest
+    container_name: transformable
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8090:8090"
+    volumes:
+      - /srv/pb/data:/app/pb_data
+      - /srv/site:/site
+    environment:
+      SITE_DEPLOY_TOKEN: "your-token"
+      SITE_URL: "https://www.example.com"
+      SITE_ROOT: "/site"
+```
 
-Compose exposes port `8090` on the host. You can bind it to `127.0.0.1` by changing the ports entry in `docker-compose.yml` to `"127.0.0.1:8090:8090"` and put a reverse proxy (e.g. Nginx) in front; see below.
+**Run with the repo `docker-compose.yml`:**
+
+```bash
+docker compose pull && docker compose up -d
+```
+
+Compose exposes port `8090` on the host. Bind to `127.0.0.1` and put a reverse proxy (e.g. Nginx) in front; see below.
+
+### Portainer Stack Example
+
+Use a stack with the same volumes and env vars (example values shown). This mirrors the compose setup above.
+
+```yaml
+version: "3.8"
+services:
+  transformable:
+    image: ghcr.io/transformable-app/transformable-container:latest
+    container_name: transformable
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8090:8090"
+    volumes:
+      - /srv/pb/data:/app/pb_data
+      - /srv/site:/site
+    environment:
+      SITE_DEPLOY_TOKEN: "your-token"
+      SITE_URL: "https://www.example.com"
+      SITE_ROOT: "/site"
 
 ### Proxy (Nginx)
 
