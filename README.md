@@ -8,6 +8,15 @@ PocketBase-backed deploy API for a single static site: deploy (zip upload), list
 
 From the project root:
 
+**Using the GitHub-built image (GHCR)**  
+GitHub Actions builds and publishes `ghcr.io/transformable-app/transformable-container` on `main` and tags. Set `DOCKER_IMAGE` in `.env` or your shell:
+
+```bash
+export DOCKER_IMAGE=ghcr.io/transformable-app/transformable-container:latest
+```
+
+Then run with Docker Compose or `docker run` as shown below.
+
 **1. Build the image**
 
 ```bash
@@ -54,7 +63,7 @@ cp .env.example .env   # edit: SITE_DEPLOY_TOKEN required
 
 **Run:**
 
-- **Published image:** Set `DOCKER_IMAGE=yourusername/transformable-container:latest` in `.env`, then:
+- **Published image (GHCR):** Set `DOCKER_IMAGE=ghcr.io/transformable-app/transformable-container:latest` in `.env`, then:
   ```bash
   docker compose pull && docker compose up -d
   ```
@@ -84,7 +93,7 @@ Example configs: [docs/DEPLOY.md](docs/DEPLOY.md#nginx-on-host).
 ## Repo layout
 
 - **pocketbase/** — PocketBase binary and [pb_hooks](pocketbase/pb_hooks/) (deploy, rollback, revisions, delete hook).
-- **docs/** — [SCHEMA.md](docs/SCHEMA.md) (revisions collection + singleton), [DEPLOY.md](docs/DEPLOY.md) (host paths, Docker, Nginx), [DOCKER_HUB.md](docs/DOCKER_HUB.md) (push image to Docker Hub).
+- **docs/** — [SCHEMA.md](docs/SCHEMA.md) (revisions collection + singleton), [DEPLOY.md](docs/DEPLOY.md) (host paths, Docker, Nginx).
 - **skills.md** — API map for Cursor (placeholders `{{PB_BASE_URL}}`, `{{SITE_DEPLOY_TOKEN}}`).
 - **docker-compose.yml** — Production compose: use published image (set `DOCKER_IMAGE` in `.env`) or build locally; see comments in file.
 - **Dockerfile** — Downloads the PocketBase Linux binary for the build arch and copies `pb_hooks`. Default env: `SITE_ROOT=/site`, `SITE_URL=...`. Run with `-v /srv/pb/data:/app/pb_data -v /srv/site:/site` and `-e SITE_DEPLOY_TOKEN=...`; see [docs/DEPLOY.md](docs/DEPLOY.md).

@@ -32,6 +32,8 @@ Nginx serves the site from `/srv/site/current`.
 
 ## Docker
 
+GitHub Actions builds and publishes the image to `ghcr.io/transformable-app/transformable-container` on `main` and tags. You can either pull that image or build locally.
+
 1. Build the image (from project root). Pin PocketBase version with `--build-arg PB_VERSION=0.36.2`:
    ```bash
    docker build -t transformable-container .
