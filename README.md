@@ -6,7 +6,7 @@ PocketBase-backed deploy API for a single static site: deploy (zip upload), list
 
 ## Docker (Compose)
 
-GitHub Actions publishes `ghcr.io/transformable-app/transformable-container` on `main` and tags. Compose pulls the image by default.
+GitHub Actions publishes `ghcr.io/transformable-app/transformable-container` on `latest` and tags. Compose pulls the image by default.
 
 **Setup:** Create host dirs and set `SITE_DEPLOY_TOKEN` and `SITE_URL` in `.env` (see [.env.example](.env.example)).
 
@@ -93,4 +93,7 @@ Example configs: [docs/DEPLOY.md](docs/DEPLOY.md#nginx-on-host).
 | GET | /api/site/revisions?limit=20 | Bearer token | List current revision id and recent revisions. |
 | POST | /api/site/rollback | Bearer token | Body `{ "revisionId": "<id>" }`; repoint `current` to that revision. |
 
-Cleanup: delete old revision records in PocketBase Admin UI; a delete hook removes the corresponding release directory (and blocks delete of the current revision).
+## Cleanup
+
+Delete old revision records in PocketBase Admin UI; a delete hook removes the corresponding release directory (and blocks delete of the current revision).
+To set up the PocketBase admin login, visit `https://site.example.com/_/` and create an admin user; use this Admin UI to delete revisions when needed.
