@@ -83,7 +83,7 @@ Example configs: [docs/DEPLOY.md](docs/DEPLOY.md#nginx-on-host).
 - **docs/** — [SCHEMA.md](docs/SCHEMA.md) (revisions collection + singleton), [DEPLOY.md](docs/DEPLOY.md) (host paths, Docker, Nginx).
 - **skills.md** — API map for Cursor (placeholders `{{PB_BASE_URL}}`, `{{SITE_DEPLOY_TOKEN}}`).
 - **docker-compose.yml** — Production compose: use published image (set `DOCKER_IMAGE` in `.env`) or build locally; see comments in file.
-- **Dockerfile** — Downloads the PocketBase Linux binary for the build arch and copies `pb_hooks`. Default env: `SITE_ROOT=/site`, `SITE_URL=...`. Run with `-v /srv/pb/data:/app/pb_data -v /srv/site:/site` and `-e SITE_DEPLOY_TOKEN=...`; see [docs/DEPLOY.md](docs/DEPLOY.md).
+- **Dockerfile** — Downloads the PocketBase Linux binary for the build arch and copies `pb_hooks`. Default env: `SITE_ROOT=/site`, `SITE_URL=...`. Run with `-v /home/forge/site.example.com/pb_data:/app/pb_data -v /home/forge/site.example.com:/site` and `-e SITE_DEPLOY_TOKEN=...`; see [docs/DEPLOY.md](docs/DEPLOY.md).
 
 ## API (3 routes)
 

@@ -6,7 +6,7 @@
   ```nginx
   server {
     server_name site.example.com;
-    root /srv/site/current;
+    root /home/forge/site.example.com/current;
     index index.html;
 
     location /api/ {
