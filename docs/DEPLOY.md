@@ -34,7 +34,7 @@ Nginx serves the site from `/srv/site/current`.
 
 1. Build the image (from project root). Pin PocketBase version with `--build-arg PB_VERSION=0.36.2`:
    ```bash
-   docker build -t transformable-app-container .
+   docker build -t transformable-container .
    ```
 2. Create host dirs and set ownership (e.g. your user or a dedicated user):
    ```bash
@@ -51,7 +51,7 @@ Nginx serves the site from `/srv/site/current`.
      -e SITE_ROOT=/site \
      -e SITE_URL=https://www.example.com \
      --user "$(id -u):$(id -g)" \
-     transformable-app-container
+     transformable-container
    ```
 
 The image sets default `SITE_ROOT=/site` and `SITE_URL=https://www.example.com`; override with `-e` at run. PocketBase listens on `127.0.0.1:8090` on the host so only Nginx (on the host) should proxy to it.

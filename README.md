@@ -1,4 +1,4 @@
-# transformable-app-container
+# transformable-container
 
 PocketBase-backed deploy API for a single static site: deploy (zip upload), list revisions, rollback. An Nginx proxy can serve the active release from disk; PocketBase handles deploy/rollback and stores revision history.
 
@@ -11,10 +11,10 @@ From the project root:
 **1. Build the image**
 
 ```bash
-docker build -t transformable-app-container .
+docker build -t transformable-container .
 ```
 
-To pin a PocketBase version: `docker build --build-arg PB_VERSION=0.36.2 -t transformable-app-container .`
+To pin a PocketBase version: `docker build --build-arg PB_VERSION=0.36.2 -t transformable-container .`
 
 **2. Create host dirs** (PocketBase data + site releases)
 
@@ -35,7 +35,7 @@ docker run -d --name pocketbase --restart unless-stopped \
   -e SITE_DEPLOY_TOKEN=your-token \
   -e SITE_URL=https://www.example.com \
   --user "$(id -u):$(id -g)" \
-  transformable-app-container
+  transformable-container
 ```
 
 PocketBase is at `http://127.0.0.1:8090` (Admin UI: `http://127.0.0.1:8090/_/`). The `revisions` collection is created automatically on first start. For Nginx and env details see [docs/DEPLOY.md](docs/DEPLOY.md).
@@ -54,7 +54,7 @@ cp .env.example .env   # edit: SITE_DEPLOY_TOKEN required
 
 **Run:**
 
-- **Published image:** Set `DOCKER_IMAGE=yourusername/transformable-app-container:latest` in `.env`, then:
+- **Published image:** Set `DOCKER_IMAGE=yourusername/transformable-container:latest` in `.env`, then:
   ```bash
   docker compose pull && docker compose up -d
   ```

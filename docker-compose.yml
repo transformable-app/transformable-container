@@ -1,7 +1,7 @@
 # Production compose. Use the published image or build locally.
 #
 # Published image: set in .env or env:
-#   DOCKER_IMAGE=YOUR_USERNAME/transformable-app-container:latest
+#   DOCKER_IMAGE=YOUR_USERNAME/transformable-container:latest
 # Then: docker compose pull && docker compose up -d
 #
 # Local build (no DOCKER_IMAGE): docker compose up -d --build
@@ -13,7 +13,7 @@
 
 services:
   transformable:
-    image: ${DOCKER_IMAGE:-transformable-app-container:latest}
+    image: ${DOCKER_IMAGE:-transformable-container:latest}
     build:
       context: .
       dockerfile: Dockerfile
