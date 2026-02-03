@@ -11,3 +11,5 @@ services:
       - SITE_DEPLOY_TOKEN=${SITE_DEPLOY_TOKEN}
       - SITE_URL=${SITE_URL:-https://site.example.com}
       - SITE_ROOT=${SITE_ROOT:-/site}
+      - SUPERUSER_EMAIL=${SUPERUSER_EMAIL}
+      - SUPERUSER_PASS=${SUPERUSER_PASS}

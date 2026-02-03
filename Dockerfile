@@ -32,11 +32,17 @@ RUN arch="${TARGETARCH}"; \
 # Hooks (must be next to executable for PocketBase to load them)
 COPY pocketbase/pb_hooks ./pb_hooks
 
+# Entrypoint for optional superuser upsert on container start
+COPY scripts/docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
+
 # Env (override at run; SITE_DEPLOY_TOKEN is required for deploy API)
 ENV SITE_ROOT=/site \
-    SITE_URL=https://www.example.com
+    SITE_URL=https://www.example.com \
+    SUPERUSER_EMAIL= \
+    SUPERUSER_PASS=
 # Mounts: -v /srv/pb/data:/app/pb_data -v /srv/site:/site
 # Port: -p 127.0.0.1:8090:8090
 
 EXPOSE 8090
-CMD ["./pocketbase", "serve", "--http=0.0.0.0:8090"]
+CMD ["./docker-entrypoint.sh"]
