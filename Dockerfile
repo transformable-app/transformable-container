@@ -1,7 +1,7 @@
 # Build from project root: docker build -f Dockerfile .
 # Downloads the PocketBase Linux binary for the build arch; pb_hooks are copied from the repo.
 
-FROM alpine:3.19
+FROM alpine:3
 RUN apk add --no-cache unzip ca-certificates wget
 
 # PocketBase version (no 'v' prefix in asset filename)
