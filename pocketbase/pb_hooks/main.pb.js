@@ -138,8 +138,9 @@ routerAdd("POST", "/api/site/deploy", function (e) {
   }
 
   var currentLink = siteRoot + "/current";
+  var currentTarget = "releases/" + savedId;
   try {
-    $os.cmd("ln", "-sfn", releaseDir, currentLink).run();
+    $os.cmd("ln", "-sfn", currentTarget, currentLink).run();
   } catch (err) {
     rec.set("status", "failed");
     $app.save(rec);
@@ -188,8 +189,9 @@ routerAdd("POST", "/api/site/rollback", function (e) {
   }
 
   var currentLink = siteRoot + "/current";
+  var currentTarget = pathVal ? pathVal.replace(/\/+$/, "") : "releases/" + revisionId;
   try {
-    $os.cmd("ln", "-sfn", releaseDir, currentLink).run();
+    $os.cmd("ln", "-sfn", currentTarget, currentLink).run();
   } catch (err) {
     throw new InternalServerError("failed to update symlink");
   }
