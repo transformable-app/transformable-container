@@ -1,6 +1,6 @@
 # Site deploy API (Cursor)
 
-Use these placeholders when making requests. Substitute from environment at execution time; never print secret values.
+Use these placeholders when making requests. Substitute from environment at execution time; never print secret values. Always create the site in site-build folder.
 
 - **Base:** `{{PB_BASE_URL}}`
 - **Auth:** `Authorization: Bearer {{SITE_DEPLOY_TOKEN}}`
@@ -23,4 +23,4 @@ Use these placeholders when making requests. Substitute from environment at exec
 
 ## Cleanup
 
-- No DELETE endpoint. Remove old revisions via PocketBase Admin UI (delete record); a delete hook will remove the release directory on disk. Do not delete the current revision.
+- No DELETE endpoint. User can remove old revisions via PocketBase Admin UI (delete record); a delete hook will remove the release directory on disk. Do not delete the current revision.

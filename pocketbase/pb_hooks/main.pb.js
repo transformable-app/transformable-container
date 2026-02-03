@@ -163,12 +163,15 @@ routerAdd("POST", "/api/site/rollback", function (e) {
   helpers.requireDeployToken(e);
   var siteRoot = helpers.getSiteRoot();
 
-  var body = {};
+  var revisionId = "";
   try {
-    e.bindBody(body);
+    var raw = readerToString(e.request().body);
+    if (raw) {
+      var body = JSON.parse(raw);
+      revisionId = (body && body.revisionId) ? String(body.revisionId).trim() : "";
+    }
   } catch (err) {}
-  var revisionId = body.revisionId;
-  if (!revisionId || typeof revisionId !== "string") throw new BadRequestError("missing revisionId");
+  if (!revisionId) throw new BadRequestError("Missing revisionId.");
 
   var record = $app.findRecordById("revisions", revisionId);
   var pathVal = record.get("path");
