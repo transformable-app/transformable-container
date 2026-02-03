@@ -41,10 +41,13 @@ else
 fi
 
 OUT=".deploy-out.$$"
+BODYFILE=".rollback-body.$$"
+printf '{"revisionId":"%s"}\n' "$REVISION_ID" > "$BODYFILE"
 CODE=$(curl -s -o "$OUT" -w "%{http_code}" -X POST "$BASE/api/site/rollback" \
   -H "Authorization: Bearer $SITE_DEPLOY_TOKEN" \
   -H "Content-Type: application/json" \
-  -d "{\"revisionId\": \"$REVISION_ID\"}")
+  -d "@$BODYFILE")
+rm -f "$BODYFILE"
 cat "$OUT"; rm -f "$OUT"
 echo "HTTP $CODE"
 if [ "$CODE" = "000" ]; then
