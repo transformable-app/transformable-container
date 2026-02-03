@@ -39,4 +39,4 @@ ENV SITE_ROOT=/site \
 # Port: -p 127.0.0.1:8090:8090
 
 EXPOSE 8090
-CMD ["./pocketbase", "serve"]
+CMD ["./pocketbase", "serve", "--http=0.0.0.0:8090"]
