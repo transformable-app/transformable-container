@@ -4,7 +4,7 @@ PocketBase-backed deploy API for a single static site: deploy (zip upload), list
 
 **Skill for agents (e.g. Cursor):** The **Docker image** built from this repo is the deploy-API solution that an agent can use (deploy zip, list revisions, rollback). This **repo** can be used locally in Cursor so [skills.md](skills.md) and `.env` are ready to go when developing or testing; agents will build in `site-build/`, deploy with `./scripts/deploy.sh`.
 
-## Docker (Compose)
+## Docker Image
 
 GitHub Actions publishes `ghcr.io/transformable-app/transformable-container` on `latest` and tags. Compose pulls the image by default.
 
