@@ -5,7 +5,7 @@ FROM alpine:3
 RUN apk add --no-cache unzip ca-certificates wget
 
 # PocketBase version (no 'v' prefix in asset filename)
-ARG PB_VERSION=0.36.5
+ARG PB_VERSION=0.36.9
 # Docker BuildKit sets these for the target platform (e.g. linux/amd64, linux/arm64)
 # Fallbacks are computed at build time if BuildKit isn't providing them.
 ARG TARGETOS=linux
